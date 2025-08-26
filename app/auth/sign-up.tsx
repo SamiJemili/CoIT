@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
-import { createUserWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signOut, deleteUser } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { router } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
@@ -8,7 +8,7 @@ import { auth, db } from '../../lib/firebase';
 type Role = 'client' | 'consultant';
 
 // utilitaire: coupe court si Firestore traîne
-const withTimeout = <T,>(p: Promise<T>, ms = 12000) =>
+const withTimeout = <T,>(p: Promise<T>, ms = 6000) =>
   Promise.race<T>([
     p,
     new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
@@ -27,9 +27,10 @@ export default function SignUp() {
     if (password.length < 6)  return Alert.alert('Mot de passe ≥ 6 caractères');
 
     setLoading(true);
+        let cred: any = null;
     try {
       // 1) Création du compte
-      const cred = await withTimeout(
+          cred = await withTimeout(
         createUserWithEmailAndPassword(auth, email.trim(), password)
       );
 
@@ -38,29 +39,20 @@ export default function SignUp() {
         await updateProfile(cred.user, { displayName: displayName.trim() });
       }
 
-      // 3) Profil Firestore (peut timeouter => on gère)
-      try {
-        await withTimeout(
-          setDoc(
-            doc(db, 'profiles', cred.user.uid),
-            {
-              uid: cred.user.uid,
-              displayName: displayName.trim(),
-              email: cred.user.email,
-              role,
-              createdAt: serverTimestamp(),
-            },
-            { merge: true }
-          )
-        );
-      } catch (e: any) {
-        // On avertit mais on poursuit: le profil sera créé au 1er login si absent
-        console.warn('WRITE PROFILE ERROR', e);
-        Alert.alert(
-          'Compte créé',
-          "L’écriture du profil a été lente/interruptible. Vous pouvez vous connecter, le profil sera complété automatiquement."
-        );
-      }
+     // 3) Profil Firestore obligatoire
+      await withTimeout(
+        setDoc(
+          doc(db, 'profiles', cred.user.uid),
+          {
+            uid: cred.user.uid,
+            displayName: displayName.trim(),
+            email: cred.user.email,
+            role,
+            createdAt: serverTimestamp(),
+          },
+          { merge: true }
+        )
+      );
 
       // 4) Retour au login (on se déconnecte)
       try { await signOut(auth); } catch {}
@@ -69,6 +61,9 @@ export default function SignUp() {
     } catch (e: any) {
       console.error('SIGNUP ERROR >>', e);
       Alert.alert('Erreur', e?.message || String(e));
+       if (cred) {
+        try { await deleteUser(cred.user); } catch {}
+      }
       try { await signOut(auth); } catch {}
     } finally {
       setLoading(false);

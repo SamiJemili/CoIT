@@ -1,9 +1,10 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { initializeAuth, getAuth, getReactNativePersistence } from 'firebase/auth/react-native';
+import { initializeAuth, getAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeFirestore, memoryLocalCache } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import Constants from 'expo-constants';
+
 
 const cfg = (Constants.expoConfig?.extra as any)?.firebase ?? {};
 export const app = getApps().length ? getApps()[0] : initializeApp(cfg);

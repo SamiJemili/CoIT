@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { router, Link } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
 
-const withTimeout = <T,>(p: Promise<T>, ms = 12000) =>
+const withTimeout = <T,>(p: Promise<T>, ms = 6000) =>
   Promise.race<T>([
     p,
     new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
@@ -24,8 +24,7 @@ export default function SignIn() {
       const cred = await withTimeout(
         signInWithEmailAndPassword(auth, email.trim(), password)
       );
-
-      // Profil Firestore (fallback si absent)
+   // Profil Firestore
       const pref = doc(db, 'profiles', cred.user.uid);
       let snap;
       try {
@@ -34,25 +33,13 @@ export default function SignIn() {
         snap = undefined as any;
       }
 
-      if (!snap || !snap.exists()) {
-        const name = cred.user.displayName || cred.user.email?.split('@')[0] || 'Utilisateur';
-        try {
-          await withTimeout(
-            setDoc(pref, {
-              uid: cred.user.uid,
-              displayName: name,
-              email: cred.user.email,
-              role: 'client',
-              createdAt: serverTimestamp(),
-            }, { merge: true })
-          );
-          snap = await getDoc(pref);
-        } catch (e) {
-          console.warn('Create profile on login failed', e);
-        }
+           if (!snap.exists()) {
+        Alert.alert('Erreur', 'Profil utilisateur introuvable.');
+        await signOut(auth);
+        return;
       }
 
-      const role = (snap?.data()?.role as string) || 'client';
+    const role = (snap.data()?.role as string) || 'client';
       if (role === 'consultant') {
         router.replace('/consultant');
       } else {
@@ -61,6 +48,7 @@ export default function SignIn() {
     } catch (e: any) {
       console.error('LOGIN ERROR >>', e);
       Alert.alert('Erreur', e?.message || String(e));
+      try { await signOut(auth); } catch {}
     } finally {
       setLoading(false);
     }
