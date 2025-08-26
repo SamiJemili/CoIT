@@ -8,7 +8,7 @@ import { auth, db } from '../../lib/firebase';
 type Role = 'client' | 'consultant';
 
 // utilitaire: coupe court si Firestore traîne
-const withTimeout = <T,>(p: Promise<T>, ms = 6000) =>
+const withTimeout = <T,>(p: Promise<T>, ms = 12000) =>
   Promise.race<T>([
     p,
     new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),

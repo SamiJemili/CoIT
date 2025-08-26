@@ -5,7 +5,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { router, Link } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
 
-const withTimeout = <T,>(p: Promise<T>, ms = 6000) =>
+const withTimeout = <T,>(p: Promise<T>, ms = 12000) =>
   Promise.race<T>([
     p,
     new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
@@ -33,8 +33,11 @@ export default function SignIn() {
         snap = undefined as any;
       }
 
-           if (!snap.exists()) {
-        Alert.alert('Erreur', 'Profil utilisateur introuvable.');
+            if (!snap || !snap.exists()) {
+        Alert.alert(
+          'Erreur',
+          !snap ? 'Profil introuvable' : 'Profil utilisateur introuvable.'
+        );
         await signOut(auth);
         return;
       }
