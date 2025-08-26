@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "CoIT",
+    "slug": "coit",
+    "scheme": "coit",
+    "version": "0.1.0",
+    "icon": "./assets/icon.png",
+    "splash": { "image": "./assets/splash.png", "resizeMode": "contain", "backgroundColor": "#ffffff" },
+    "plugins": ["expo-router"],
+    "android": { "package": "com.coit.app" },
+    "web": { "bundler": "metro", "output": "static", "favicon": "./assets/favicon.png" },
+    "extra": {
+      "firebase": {
+        "apiKey": "AIzaSyBSLnJdREGlFLRkN8KwWWdod5WvFbobYrg",
+        "authDomain": "coit-505be.firebaseapp.com",
+        "projectId": "coit-505b",
+        "storageBucket": "coit-505be.firebasestorage.app",
+        "messagingSenderId": "835626295554",
+        "appId": "1:835626295554:web:45ced7fe26f3485044e21b"
+      }
+    }
+  }
+}
