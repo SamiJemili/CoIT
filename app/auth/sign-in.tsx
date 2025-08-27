@@ -2,14 +2,10 @@ import { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
+import type { DocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { router, Link } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
-
-const withTimeout = <T,>(p: Promise<T>, ms = 20000) =>
-  Promise.race<T>([
-    p,
-    new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
-  ]);
+import { withTimeout } from '../../lib/with-timeout';
 
 export default function SignIn() {
   const [email, setEmail]       = useState('');
@@ -22,15 +18,16 @@ export default function SignIn() {
     setLoading(true);
     try {
       const cred = await withTimeout(
-        signInWithEmailAndPassword(auth, email.trim(), password)
+       signInWithEmailAndPassword(auth, email.trim(), password),
+        20000,
       );
    // Profil Firestore
       const pref = doc(db, 'profiles', cred.user.uid);
-      let snap;
+    let snap: DocumentSnapshot<DocumentData> | null = null;
       try {
-        snap = await withTimeout(getDoc(pref));
+         snap = await withTimeout(getDoc(pref), 20000);
       } catch {
-        snap = undefined as any;
+         snap = null;
       }
 
             if (!snap || !snap.exists()) {
@@ -42,7 +39,7 @@ export default function SignIn() {
         return;
       }
 
-    const role = (snap.data()?.role as string) || 'client';
+     const role = (snap.data()?.role as string) || 'client';
       if (role === 'consultant') {
         router.replace('/consultant');
       } else {

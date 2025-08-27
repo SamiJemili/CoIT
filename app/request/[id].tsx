@@ -16,7 +16,7 @@ export default function RequestChat() {
   const [messages, setMessages]   = useState<Message[]>([]);
   const [input, setInput]         = useState('');
   const [loading, setLoading]     = useState(true);
-  const flatListRef = useRef<FlatList>(null);
+    const flatListRef = useRef<FlatList<Message>>(null);
 
   useEffect(() => {
     if (!id) return;

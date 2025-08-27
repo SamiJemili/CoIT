@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { createUserWithEmailAndPassword, updateProfile, signOut, deleteUser } from 'firebase/auth';
+import type { UserCredential } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { router } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
+import { withTimeout } from '../../lib/with-timeout';
 
 type Role = 'client' | 'consultant';
 
-// utilitaire: coupe court si Firestore traîne
-const withTimeout = <T,>(p: Promise<T>, ms = 12000) =>
-  Promise.race<T>([
-    p,
-    new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
-  ]);
+
 
 export default function SignUp() {
   const [displayName, setDisplayName] = useState('');
@@ -27,27 +24,29 @@ export default function SignUp() {
     if (password.length < 6)  return Alert.alert('Mot de passe ≥ 6 caractères');
 
     setLoading(true);
-        let cred: any = null;
+          let cred: UserCredential | null = null;
     try {
       // 1) Création du compte
-          cred = await withTimeout(
-        createUserWithEmailAndPassword(auth, email.trim(), password)
+       cred = await withTimeout(
+        createUserWithEmailAndPassword(auth, email.trim(), password),
+        12000,
       );
 
       // 2) Nom d’affichage (facultatif)
+       const user = cred!.user;
       if (displayName.trim()) {
-        await updateProfile(cred.user, { displayName: displayName.trim() });
+          await updateProfile(user, { displayName: displayName.trim() });
       }
 
      // 3) Profil Firestore obligatoire
        try {
         await withTimeout(
           setDoc(
-            doc(db, 'profiles', cred.user.uid),
+             doc(db, 'profiles', user.uid),
             {
-              uid: cred.user.uid,
+              uid: user.uid,
               displayName: displayName.trim(),
-              email: cred.user.email,
+              email: user.email,
               role,
               createdAt: serverTimestamp(),
             },

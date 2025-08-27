@@ -3,14 +3,8 @@ import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'reac
 import { addDoc, collection, serverTimestamp, waitForPendingWrites } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { router } from 'expo-router';
-import { db, sleep } from '../../lib/firebase';
-
-// coupe court si réseau lent
-const withTimeout = <T,>(p: Promise<T>, ms = 20000) =>
-  Promise.race<T>([
-    p,
-    new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
-  ]);
+import { db } from '../../lib/firebase';
+import { withTimeout } from '../../lib/with-timeout';
 
 export default function NewRequest() {
   const [title, setTitle]   = useState('');
@@ -32,7 +26,8 @@ export default function NewRequest() {
           requesterEmail: u.email ?? '',
           status: 'open',
           createdAt: serverTimestamp(),
-        })
+       }),
+        20000,
       );
 
       // On force un flush réseau court (sans bloquer l’UI)
