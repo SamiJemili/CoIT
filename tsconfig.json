@@ -10,5 +10,6 @@
     "noEmit": true,
     "skipLibCheck": true,
     "types": ["react", "react-native"]
-  }
+  },
+  "include": ["app", "lib", "types"]
 }

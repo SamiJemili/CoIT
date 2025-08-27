@@ -40,20 +40,37 @@ export default function SignUp() {
       }
 
      // 3) Profil Firestore obligatoire
-      await withTimeout(
-        setDoc(
-          doc(db, 'profiles', cred.user.uid),
-          {
-            uid: cred.user.uid,
-            displayName: displayName.trim(),
-            email: cred.user.email,
-            role,
-            createdAt: serverTimestamp(),
-          },
-          { merge: true }
-        )
-      );
-
+       try {
+        await withTimeout(
+          setDoc(
+            doc(db, 'profiles', cred.user.uid),
+            {
+              uid: cred.user.uid,
+              displayName: displayName.trim(),
+              email: cred.user.email,
+              role,
+              createdAt: serverTimestamp(),
+            },
+            { merge: true }
+          ),
+          20000
+        );
+      } catch (err: any) {
+        console.error('SETDOC ERROR >>', err);
+        Alert.alert(
+          'Erreur',
+          "Échec lors de l'écriture du profil",
+          [
+            { text: 'Réessayer', onPress: submit },
+            { text: 'Connexion', onPress: () => router.replace('/auth/sign-in') },
+          ]
+        );
+        if (cred) {
+          try { await deleteUser(cred.user); } catch {}
+        }
+        try { await signOut(auth); } catch {}
+        return;
+      }
       // 4) Retour au login (on se déconnecte)
       try { await signOut(auth); } catch {}
       Alert.alert('Compte créé', 'Veuillez vous connecter avec vos identifiants.');

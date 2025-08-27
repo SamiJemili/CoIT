@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { db, sleep } from '../../lib/firebase';
 
 // coupe court si réseau lent
-const withTimeout = <T,>(p: Promise<T>, ms = 12000) =>
+const withTimeout = <T,>(p: Promise<T>, ms = 20000) =>
   Promise.race<T>([
     p,
     new Promise<T>((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms)),
@@ -37,7 +37,7 @@ export default function NewRequest() {
 
       // On force un flush réseau court (sans bloquer l’UI)
       try {
-        await withTimeout(waitForPendingWrites(db), 4000);
+     await withTimeout(waitForPendingWrites(db), 8000);
       } catch {}
 
       // Redirige directement vers le chat de cette demande
