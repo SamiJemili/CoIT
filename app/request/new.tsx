@@ -17,8 +17,8 @@ export default function NewRequest() {
     title: { fontSize: 24, fontWeight: '800', color: colors.text },
     input: { borderWidth: 1, borderRadius: 10, padding: 12, borderColor: colors.border, color: colors.text },
     inputDesc: { borderWidth: 1, borderRadius: 10, padding: 12, minHeight: 120, borderColor: colors.border, color: colors.text },
-    sendBtn: { marginTop: 6, backgroundColor: colors.brand, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
-    sendText: { color: colors.bg, fontWeight: '800' },
+  sendBtn: { marginTop: 6, backgroundColor: colors.accent, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
+    sendText: { color: colors.text, fontWeight: '800' },
   }), [colors]);
 
   const submit = async () => {
@@ -79,7 +79,7 @@ export default function NewRequest() {
         disabled={loading}
           style={[styles.sendBtn, { opacity: loading ? 0.7 : 1 }]}
       >
-              {loading ? <ActivityIndicator color={colors.bg} /> : <Text style={styles.sendText}>ENVOYER</Text>}
+              {loading ? <ActivityIndicator color={colors.text} /> : <Text style={styles.sendText}>ENVOYER</Text>}
       </Pressable>
     </View>
   );

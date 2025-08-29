@@ -2,8 +2,9 @@
 import React, { createContext, useContext } from 'react';
 
 export const colors = {
-  brand: '#2563EB',
+   brand: '#2563EB',
   brandLight: '#DCE7FF',
+   accent: '#0F172A',
   text: '#0F172A',
   subtext: '#64748B',
   border: '#E5E7EB',

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Alert } from 'react-native';
+import UIButton from '../../components/UIButton';
 import { createUserWithEmailAndPassword, updateProfile, signOut, deleteUser } from 'firebase/auth';
 import type { UserCredential } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
@@ -116,36 +117,42 @@ export default function SignUp() {
       />
 
       <View style={{ flexDirection: 'row', gap: 10 }}>
-        <Pressable
+        <UIButton
           onPress={() => setRole('client')}
           style={{
-            flex: 1, padding: 12, borderRadius: 10, borderWidth: 1,
-            backgroundColor: role === 'client' ? '#e0ecff' : 'white', alignItems: 'center'
+             flex: 1,
+            padding: 12,
+            borderRadius: 10,
+            borderWidth: 1,
+            backgroundColor: role === 'client' ? '#e0ecff' : 'white',
+            alignItems: 'center',
           }}
         >
           <Text style={{ fontWeight: '600' }}>Client</Text>
-        </Pressable>
-        <Pressable
+         </UIButton>
+        <UIButton
           onPress={() => setRole('consultant')}
           style={{
-            flex: 1, padding: 12, borderRadius: 10, borderWidth: 1,
-            backgroundColor: role === 'consultant' ? '#e0ecff' : 'white', alignItems: 'center'
+           flex: 1,
+            padding: 12,
+            borderRadius: 10,
+            borderWidth: 1,
+            backgroundColor: role === 'consultant' ? '#e0ecff' : 'white',
+            alignItems: 'center',
           }}
         >
           <Text style={{ fontWeight: '600' }}>Consultant</Text>
-        </Pressable>
+         </UIButton>
       </View>
 
-      <Pressable
+       <UIButton
         onPress={submit}
         disabled={loading}
-        style={{
-          marginTop: 6, backgroundColor: '#2563eb', borderRadius: 12, paddingVertical: 14,
-          alignItems: 'center', opacity: loading ? 0.7 : 1
-        }}
+       title={loading ? '' : 'CRÉER MON COMPTE'}
+        style={{ marginTop: 6 }}
       >
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: 'white', fontWeight: '800' }}>CRÉER MON COMPTE</Text>}
-      </Pressable>
+          {loading ? <ActivityIndicator color="#fff" /> : undefined}
+      </UIButton>
     </View>
   );
 }

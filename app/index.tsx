@@ -1,9 +1,13 @@
 import { Link, useRouter } from 'expo-router';
-import { View, Text, Pressable, Alert } from 'react-native';
+import { View, Text, Alert } from 'react-native';
+import UIButton from '../components/UIButton';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../lib/theme';
 import { getAuth, signOut } from 'firebase/auth';
 
 export default function Home() {
   const r = useRouter();
+   const { colors } = useTheme();
 
   const logout = async () => {
     try {
@@ -16,55 +20,69 @@ export default function Home() {
 
   return (
     <View style={{ flex: 1, padding: 20, gap: 16 }}>
-      <Text style={{ fontSize: 28, fontWeight: '800' }}>CoIT</Text>
-      <Text style={{ color: '#5a6472', marginBottom: 8 }}>
+       <Text style={{ fontSize: 28, fontWeight: '800', color: colors.text }}>CoIT</Text>
+      <Text style={{ color: colors.subtext, marginBottom: 8 }}>
         Bienvenue sur CoIT. Choisissez votre action.
       </Text>
 
       <Link href="/request/new" asChild>
-        <Pressable
+        <UIButton
           style={{
             padding: 16,
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: '#e3e8ef',
-            backgroundColor: '#fff',
+             borderColor: colors.border,
+            backgroundColor: colors.bg,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700' }}>Créer une demande</Text>
-          <Text style={{ color: '#5a6472' }}>Décrivez votre besoin TI</Text>
-        </Pressable>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+            <Ionicons
+              name="create-outline"
+              size={24}
+              color={colors.accent}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>
+              Créer une demande
+            </Text>
+          </View>
+          <Text style={{ color: colors.subtext }}>Décrivez votre besoin TI</Text>
+        </UIButton>
       </Link>
 
       <Link href="/request" asChild>
-        <Pressable
+        <UIButton
           style={{
             padding: 16,
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: '#e3e8ef',
-            backgroundColor: '#fff',
+               borderColor: colors.border,
+            backgroundColor: colors.bg,
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '700' }}>Mes demandes</Text>
-          <Text style={{ color: '#5a6472' }}>Suivre statut et chat</Text>
-        </Pressable>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+            <Ionicons
+              name="reader-outline"
+              size={24}
+              color={colors.text}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text }}>
+              Mes demandes
+            </Text>
+          </View>
+          <Text style={{ color: colors.subtext }}>Suivre statut et chat</Text>
+        </UIButton>
       </Link>
 
-      <Pressable
+      <UIButton
         onPress={logout}
-        style={{
-          marginTop: 24,
-          backgroundColor: '#1d4ed8',
-          paddingVertical: 14,
-          borderRadius: 12,
-          alignItems: 'center',
-        }}
-      >
-        <Text style={{ color: 'white', fontSize: 18, fontWeight: '700' }}>
-          Se déconnecter
-        </Text>
-      </Pressable>
+       
+      
+       title="Se déconnecter"
+        style={{ marginTop: 24 }}
+        textStyle={{ fontSize: 18 }}
+        />
     </View>
   );
 }

@@ -1,7 +1,7 @@
 // app/_layout.tsx
 import { Stack } from 'expo-router';
 import { LogBox } from 'react-native';
-import { colors } from '../lib/theme';
+import { ThemeProvider, useTheme } from '../lib/theme';
 
 LogBox.ignoreLogs([
   /WebChannelConnection .* transport errored/i,
@@ -9,16 +9,24 @@ LogBox.ignoreLogs([
   /RPC 'Listen' stream .* transport errored/i,
 ]);
 
-export default function RootLayout() {
+function LayoutStack() {
+  const { colors } = useTheme();
   return (
     <Stack
       screenOptions={{
         headerTitle: 'CoIT',
         headerStyle: { backgroundColor: colors.bg },
-        headerTintColor: colors.brand,
+         headerTintColor: colors.accent,
         headerTitleStyle: { fontWeight: '800', color: colors.text },
-        contentStyle: { backgroundColor: '#fff' },
+        contentStyle: { backgroundColor: colors.bg },
       }}
     />
+  );
+}
+export default function RootLayout() {
+  return (
+    <ThemeProvider>
+      <LayoutStack />
+    </ThemeProvider>
   );
 }

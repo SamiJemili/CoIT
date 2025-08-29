@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Alert } from 'react-native';
+import UIButton from '../../components/UIButton';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import type { DocumentSnapshot, DocumentData } from 'firebase/firestore';
@@ -74,16 +75,14 @@ export default function SignIn() {
         style={{ borderWidth: 1, borderRadius: 10, padding: 12 }}
       />
 
-      <Pressable
+      <UIButton
         onPress={go}
         disabled={loading}
-        style={{
-          marginTop: 6, backgroundColor: '#0f172a', borderRadius: 12, paddingVertical: 14,
-          alignItems: 'center', opacity: loading ? 0.7 : 1
-        }}
+         title={loading ? '' : 'SE CONNECTER'}
+        style={{ marginTop: 6 }}
       >
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: 'white', fontWeight: '800' }}>SE CONNECTER</Text>}
-      </Pressable>
+         {loading ? <ActivityIndicator color="#fff" /> : undefined}
+       </UIButton>
 
       <Link href="/auth/sign-up" style={{ marginTop: 14, color: '#2563eb' }}>
         Créer un compte

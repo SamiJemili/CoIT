@@ -40,14 +40,14 @@ const [msgsLoading, setMsgsLoading] = useState(true);
     loadingText: { marginTop: 6, color: colors.subtext },
     container: { flex: 1 },
     bubble: { marginVertical: 4, marginHorizontal: 8, padding: 10, borderRadius: 12, maxWidth: '80%' },
-    bubbleMe: { alignSelf: 'flex-end', backgroundColor: colors.brand },
-    bubbleOther: { alignSelf: 'flex-start', backgroundColor: colors.bubbleOther },
-    bubbleTextMe: { color: colors.bg },
+    bubbleMe: { alignSelf: 'flex-end', backgroundColor: colors.accent },
+    bubbleOther: { alignSelf: 'flex-start', backgroundColor: colors.border },
+    bubbleTextMe: { color: colors.text },
     bubbleTextOther: { color: colors.text },
     inputRow: { flexDirection: 'row', padding: 8, borderTopWidth: 1, borderColor: colors.border },
     input: { flex: 1, borderWidth: 1, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, marginRight: 8, borderColor: colors.border, color: colors.text },
-    sendBtn: { backgroundColor: colors.brand, borderRadius: 20, paddingHorizontal: 16, justifyContent: 'center' },
-    sendText: { color: colors.bg, fontWeight: '700' },
+     sendBtn: { backgroundColor: colors.accent, borderRadius: 20, paddingHorizontal: 16, justifyContent: 'center' },
+    sendText: { color: colors.text, fontWeight: '700' },
     infoBar: { padding: 8, borderBottomWidth: 1, borderColor: colors.border },
     infoText: { textAlign: 'center', color: colors.subtext },
   }), [colors]);
@@ -180,7 +180,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
  if (msgsLoading || infoLoading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator color={colors.brand} />
+           <ActivityIndicator color={colors.accent} />
         <Text style={styles.loadingText}>Chargement…</Text>
       </View>
     );
