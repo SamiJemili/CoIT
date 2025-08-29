@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
-import { View, Text, TextInput, Pressable, FlatList, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, FlatList, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, Alert } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -168,7 +168,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
       try {
         await addDoc(collection(db, 'requests', id, 'consultantNotes'), {
           text: t,
-          consultantId: auth.currentUser.uid,
+            consultantId: auth.currentUser!.uid,
           createdAt: serverTimestamp(),
         });
       } catch (e) {
