@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import UIButton from '../../components/UIButton';
 import { createUserWithEmailAndPassword, updateProfile, signOut, deleteUser } from 'firebase/auth';
 import type { UserCredential } from 'firebase/auth';
@@ -7,6 +7,7 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { router } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
 import { withTimeout } from '../../lib/with-timeout';
+import { useTheme } from '../../lib/theme';
 
 type Role = 'client' | 'consultant';
 
@@ -14,10 +15,35 @@ type Role = 'client' | 'consultant';
 
 export default function SignUp() {
   const [displayName, setDisplayName] = useState('');
-  const [email, setEmail]             = useState('');
-  const [password, setPassword]       = useState('');
-  const [role, setRole]               = useState<Role>('client');
-  const [loading, setLoading]         = useState(false);
+   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState<Role>('client');
+  const [loading, setLoading] = useState(false);
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: { flex: 1, padding: 20, gap: 14 },
+    title: { fontSize: 28, fontWeight: '800', marginBottom: 8, color: colors.text },
+    input: {
+      borderWidth: 1,
+      borderRadius: 10,
+      padding: 12,
+      borderColor: colors.border,
+    },
+    roleRow: { flexDirection: 'row', gap: 10 },
+    roleButton: {
+      flex: 1,
+      padding: 12,
+      borderRadius: 10,
+      borderWidth: 1,
+      backgroundColor: colors.bg,
+      alignItems: 'center',
+      borderColor: colors.border,
+    },
+    roleButtonActive: { backgroundColor: colors.brandLight },
+    roleButtonText: { fontWeight: '600', color: colors.text },
+    submitButton: { marginTop: 6 },
+  });
 
   const submit = async () => {
     if (!displayName.trim()) return Alert.alert('Nom requis');
@@ -88,15 +114,15 @@ export default function SignUp() {
   };
 
   return (
-    <View style={{ flex: 1, padding: 20, gap: 14 }}>
-      <Text style={{ fontSize: 28, fontWeight: '800', marginBottom: 8 }}>Créer un compte</Text>
+<View style={styles.container}>
+      <Text style={styles.title}>Créer un compte</Text>
 
       <TextInput
         placeholder="Nom"
         value={displayName}
         onChangeText={setDisplayName}
         autoCapitalize="words"
-        style={{ borderWidth: 1, borderRadius: 10, padding: 12 }}
+         style={styles.input}
       />
 
       <TextInput
@@ -105,7 +131,7 @@ export default function SignUp() {
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
-        style={{ borderWidth: 1, borderRadius: 10, padding: 12 }}
+         style={styles.input}
       />
 
       <TextInput
@@ -113,45 +139,31 @@ export default function SignUp() {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ borderWidth: 1, borderRadius: 10, padding: 12 }}
+        style={styles.input}
       />
 
-      <View style={{ flexDirection: 'row', gap: 10 }}>
+      <View style={styles.roleRow}>
         <UIButton
           onPress={() => setRole('client')}
-          style={{
-             flex: 1,
-            padding: 12,
-            borderRadius: 10,
-            borderWidth: 1,
-            backgroundColor: role === 'client' ? '#e0ecff' : 'white',
-            alignItems: 'center',
-          }}
+           style={[styles.roleButton, role === 'client' && styles.roleButtonActive]}
         >
-          <Text style={{ fontWeight: '600' }}>Client</Text>
-         </UIButton>
+          <Text style={styles.roleButtonText}>Client</Text>
+        </UIButton>
         <UIButton
           onPress={() => setRole('consultant')}
-          style={{
-           flex: 1,
-            padding: 12,
-            borderRadius: 10,
-            borderWidth: 1,
-            backgroundColor: role === 'consultant' ? '#e0ecff' : 'white',
-            alignItems: 'center',
-          }}
+           style={[styles.roleButton, role === 'consultant' && styles.roleButtonActive]}
         >
-          <Text style={{ fontWeight: '600' }}>Consultant</Text>
-         </UIButton>
+          <Text style={styles.roleButtonText}>Consultant</Text>
+        </UIButton>
       </View>
 
        <UIButton
         onPress={submit}
         disabled={loading}
        title={loading ? '' : 'CRÉER MON COMPTE'}
-        style={{ marginTop: 6 }}
+        style={styles.submitButton}
       >
-          {loading ? <ActivityIndicator color="#fff" /> : undefined}
+         {loading ? <ActivityIndicator color={colors.bg} /> : undefined}
       </UIButton>
     </View>
   );
