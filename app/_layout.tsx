@@ -1,6 +1,7 @@
 // app/_layout.tsx
 import { Stack } from 'expo-router';
-import { LogBox } from 'react-native';
+import { LogBox, Text } from 'react-native';
+import { useFonts } from 'expo-font';
 import { ThemeProvider, useTheme } from '../lib/theme';
 
 LogBox.ignoreLogs([
@@ -17,13 +18,25 @@ function LayoutStack() {
         headerTitle: 'CoIT',
         headerStyle: { backgroundColor: colors.bg },
          headerTintColor: colors.accent,
-        headerTitleStyle: { fontWeight: '800', color: colors.text },
+       headerTitleStyle: { fontWeight: '800', color: colors.text, fontFamily: 'Inter' },
         contentStyle: { backgroundColor: colors.bg },
       }}
     />
   );
 }
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Inter: require('../assets/fonts/Inter-VariableFont.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+const TextAny = Text as any;
+if (TextAny.defaultProps == null) TextAny.defaultProps = {};
+TextAny.defaultProps.style = [TextAny.defaultProps.style, { fontFamily: 'Inter' }];
+
+
   return (
     <ThemeProvider>
       <LayoutStack />
