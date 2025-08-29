@@ -1,21 +1,35 @@
-import { useEffect, useState } from 'react';
-import { View, Text, Pressable, ActivityIndicator } from 'react-native';
+import { useEffect, useState, useMemo } from 'react';
+import { View, Text, Pressable, ActivityIndicator, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../../lib/firebase';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { useTheme } from '../../lib/theme';
 
 type Req = {
   id: string;
   title?: string;
   status?: string;
   createdAt?: any; // Timestamp
+    price?: number;
+  priceStatus?: 'pending' | 'accepted' | 'rejected' | null;
 };
 
 export default function MyRequests() {
   const [uid, setUid] = useState<string | null>(getAuth().currentUser?.uid ?? null);
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<Req[]>([]);
+  const { colors } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+    loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    loadingText: { marginTop: 8, color: colors.subtext },
+    container: { flex: 1, padding: 16, gap: 12 },
+    title: { fontSize: 28, fontWeight: '800', color: colors.text },
+    empty: { color: colors.subtext },
+    card: { padding: 14, borderWidth: 1, borderRadius: 12, marginVertical: 6, borderColor: colors.border },
+    cardTitle: { fontWeight: '700', color: colors.text },
+    cardSub: { color: colors.subtext, marginTop: 4 },
+  }), [colors]);
 
   // suit l’auth pour être sûr d’avoir l’uid
   useEffect(() => {
@@ -48,25 +62,28 @@ export default function MyRequests() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator />
-        <Text style={{ marginTop: 8, color: '#666' }}>Chargement…</Text>
+      <View style={styles.loading}>
+        <ActivityIndicator color={colors.brand} />
+        <Text style={styles.loadingText}>Chargement…</Text>
       </View>
     );
   }
 
   return (
-    <View style={{ padding: 16, gap: 12 }}>
-      <Text style={{ fontSize: 28, fontWeight: '800' }}>Mes demandes</Text>
+     <View style={styles.container}>
+      <Text style={styles.title}>Mes demandes</Text>
 
       {items.length === 0 ? (
-        <Text style={{ color: '#6b7280' }}>Aucune demande pour le moment.</Text>
+      <Text style={styles.empty}>Aucune demande pour le moment.</Text>
       ) : (
         items.map((r) => (
           <Link key={r.id} href={`/request/${r.id}`} asChild>
-            <Pressable style={{ padding: 14, borderWidth: 1, borderRadius: 12, marginVertical: 6 }}>
-              <Text style={{ fontWeight: '700' }}>{r.title || '(sans titre)'}</Text>
-              <Text style={{ color: '#6b7280', marginTop: 4 }}>Statut : {r.status ?? 'open'}</Text>
+            <Pressable style={styles.card}>
+              <Text style={styles.cardTitle}>{r.title || '(sans titre)'}</Text>
+              <Text style={styles.cardSub}>
+                Statut : {r.status ?? 'open'}
+                {r.price ? ` • ${r.price}€` : ''}
+              </Text>
             </Pressable>
           </Link>
         ))

@@ -1,15 +1,25 @@
-import { useState } from 'react';
-import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'react-native';
+import { useState, useMemo } from 'react';
+import { View, Text, TextInput, Pressable, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { addDoc, collection, serverTimestamp, waitForPendingWrites } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { router } from 'expo-router';
 import { db } from '../../lib/firebase';
 import { withTimeout } from '../../lib/with-timeout';
+import { useTheme } from '../../lib/theme';
 
 export default function NewRequest() {
   const [title, setTitle]   = useState('');
   const [desc, setDesc]     = useState('');
   const [loading, setLoad]  = useState(false);
+    const { colors } = useTheme();
+  const styles = useMemo(() => StyleSheet.create({
+    container: { flex: 1, padding: 20, gap: 12 },
+    title: { fontSize: 24, fontWeight: '800', color: colors.text },
+    input: { borderWidth: 1, borderRadius: 10, padding: 12, borderColor: colors.border, color: colors.text },
+    inputDesc: { borderWidth: 1, borderRadius: 10, padding: 12, minHeight: 120, borderColor: colors.border, color: colors.text },
+    sendBtn: { marginTop: 6, backgroundColor: colors.brand, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
+    sendText: { color: colors.bg, fontWeight: '800' },
+  }), [colors]);
 
   const submit = async () => {
     const u = getAuth().currentUser;
@@ -25,6 +35,8 @@ export default function NewRequest() {
           requesterId: u.uid,
           requesterEmail: u.email ?? '',
           status: 'open',
+            price: null,
+          priceStatus: null,
           createdAt: serverTimestamp(),
        }),
         20000,
@@ -46,28 +58,28 @@ export default function NewRequest() {
   };
 
   return (
-    <View style={{ flex:1, padding:20, gap:12 }}>
-      <Text style={{ fontSize:24, fontWeight:'800' }}>Nouvelle demande</Text>
+        <View style={styles.container}>
+      <Text style={styles.title}>Nouvelle demande</Text>
       <TextInput
         placeholder="Titre"
         value={title}
         onChangeText={setTitle}
-        style={{ borderWidth:1, borderRadius:10, padding:12 }}
+        style={styles.input}
       />
       <TextInput
         placeholder="Description"
         value={desc}
         onChangeText={setDesc}
         multiline
-        style={{ borderWidth:1, borderRadius:10, padding:12, minHeight:120 }}
+        style={styles.inputDesc}
       />
 
       <Pressable
         onPress={submit}
         disabled={loading}
-        style={{ marginTop:6, backgroundColor:'#2563eb', borderRadius:12, paddingVertical:14, alignItems:'center', opacity:loading?0.7:1 }}
+          style={[styles.sendBtn, { opacity: loading ? 0.7 : 1 }]}
       >
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color:'#fff', fontWeight:'800' }}>ENVOYER</Text>}
+              {loading ? <ActivityIndicator color={colors.bg} /> : <Text style={styles.sendText}>ENVOYER</Text>}
       </Pressable>
     </View>
   );

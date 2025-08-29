@@ -1,0 +1,30 @@
+// lib/theme.ts
+import React, { createContext, useContext } from 'react';
+
+export const colors = {
+  brand: '#2563EB',
+  brandLight: '#DCE7FF',
+  text: '#0F172A',
+  subtext: '#64748B',
+  border: '#E5E7EB',
+  bg: '#FFFFFF',
+  bubbleMe: '#E0F2FE',
+  bubbleOther: '#F1F5F9',
+};
+
+type Theme = {
+  colors: typeof colors;
+};
+
+const ThemeContext = createContext<Theme>({ colors });
+
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => (
+  <ThemeContext.Provider value={{ colors }}>{children}</ThemeContext.Provider>
+);
+
+export const useTheme = () => useContext(ThemeContext);
+
+export function formatDate(d?: Date | null) {
+  if (!d) return '';
+  return d.toLocaleString();
+}
