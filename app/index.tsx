@@ -11,7 +11,7 @@ export default function Home() {
 
   const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 16 },
-    title: { fontSize: 28, fontWeight: '800', color: colors.text },
+     title: { fontSize: 28, color: colors.text, fontFamily: 'InterBold' },
     subtitle: { color: colors.subtext, marginBottom: 8 },
     button: {
       padding: 16,
@@ -22,7 +22,7 @@ export default function Home() {
     },
     buttonRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
     icon: { marginRight: 8 },
-    buttonTitle: { fontSize: 18, fontWeight: '700', color: colors.text },
+    buttonTitle: { fontSize: 18, color: colors.text, fontFamily: 'InterBold' },
     buttonSubtitle: { color: colors.subtext },
     logoutButton: { marginTop: 24 },
     logoutText: { fontSize: 18 },

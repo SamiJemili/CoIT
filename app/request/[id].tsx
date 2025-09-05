@@ -47,7 +47,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
     inputRow: { flexDirection: 'row', padding: 8, borderTopWidth: 1, borderColor: colors.border },
     input: { flex: 1, borderWidth: 1, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, marginRight: 8, borderColor: colors.border, color: colors.text },
      sendBtn: { backgroundColor: colors.accent, borderRadius: 20, paddingHorizontal: 16, justifyContent: 'center' },
-    sendText: { color: colors.text, fontWeight: '700' },
+     sendText: { color: colors.text, fontFamily: 'InterBold' },
     infoBar: { padding: 8, borderBottomWidth: 1, borderColor: colors.border },
     infoText: { textAlign: 'center', color: colors.subtext },
   }), [colors]);
@@ -214,7 +214,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
             onPress={propose}
             style={{ backgroundColor: '#2563eb', borderRadius: 8, paddingHorizontal: 16, justifyContent: 'center' }}
           >
-            <Text style={{ color: 'white', fontWeight: '700' }}>Proposer</Text>
+             <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Proposer</Text>
           </Pressable>
         </View>
       ) : priceStatus === 'pending' ? (
@@ -225,13 +225,13 @@ const [msgsLoading, setMsgsLoading] = useState(true);
               onPress={() => respond('accepted')}
               style={{ flex: 1, backgroundColor: '#16a34a', borderRadius: 8, padding: 8, alignItems: 'center' }}
             >
-              <Text style={{ color: 'white', fontWeight: '700' }}>Accepter</Text>
+               <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Accepter</Text>
             </Pressable>
             <Pressable
               onPress={() => respond('rejected')}
               style={{ flex: 1, backgroundColor: '#dc2626', borderRadius: 8, padding: 8, alignItems: 'center' }}
             >
-              <Text style={{ color: 'white', fontWeight: '700' }}>Refuser</Text>
+              <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Refuser</Text>
             </Pressable>
           </View>
         </View>
@@ -240,13 +240,13 @@ const [msgsLoading, setMsgsLoading] = useState(true);
  {role === 'consultant' && (
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 8, borderBottomWidth: 1, borderColor: '#ddd' }}>
           <Pressable onPress={() => changeStatus('on_hold')} style={{ backgroundColor: '#fde68a', padding: 8, borderRadius: 8 }}>
-            <Text style={{ fontWeight: '700' }}>Mettre en attente</Text>
+           <Text style={{ fontFamily: 'InterBold' }}>Mettre en attente</Text>
           </Pressable>
           <Pressable onPress={() => changeStatus('closed')} style={{ backgroundColor: '#f87171', padding: 8, borderRadius: 8 }}>
-            <Text style={{ color: 'white', fontWeight: '700' }}>Clore la demande</Text>
+            <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Clore la demande</Text>
           </Pressable>
           <Pressable onPress={addNote} style={{ backgroundColor: '#93c5fd', padding: 8, borderRadius: 8 }}>
-            <Text style={{ fontWeight: '700' }}>Ajouter un commentaire</Text>
+            <Text style={{ fontFamily: 'InterBold' }}>Ajouter un commentaire</Text>
           </Pressable>
         </View>
       )}

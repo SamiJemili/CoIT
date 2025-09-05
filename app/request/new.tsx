@@ -14,11 +14,11 @@ export default function NewRequest() {
     const { colors } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 12 },
-    title: { fontSize: 24, fontWeight: '800', color: colors.text },
+    title: { fontSize: 24, color: colors.text, fontFamily: 'InterBold' },
     input: { borderWidth: 1, borderRadius: 10, padding: 12, borderColor: colors.border, color: colors.text },
     inputDesc: { borderWidth: 1, borderRadius: 10, padding: 12, minHeight: 120, borderColor: colors.border, color: colors.text },
   sendBtn: { marginTop: 6, backgroundColor: colors.accent, borderRadius: 12, paddingVertical: 14, alignItems: 'center' },
-    sendText: { color: colors.text, fontWeight: '800' },
+     sendText: { color: colors.text, fontFamily: 'InterBold' },
   }), [colors]);
 
   const submit = async () => {

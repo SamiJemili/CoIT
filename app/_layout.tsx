@@ -17,16 +17,17 @@ function LayoutStack() {
       screenOptions={{
         headerTitle: 'CoIT',
         headerStyle: { backgroundColor: colors.bg },
-         headerTintColor: colors.accent,
-       headerTitleStyle: { fontWeight: '800', color: colors.text, fontFamily: 'Inter' },
+      headerTintColor: colors.accent,
+        headerTitleStyle: { color: colors.text, fontFamily: 'InterBold' },
         contentStyle: { backgroundColor: colors.bg },
       }}
     />
   );
 }
 export default function RootLayout() {
-   const [fontsLoaded, error] = useFonts({
-    Inter: require('../assets/fonts/Inter-VariableFont.ttf'),
+    const [fontsLoaded, error] = useFonts({
+    InterRegular: require('../assets/fonts/Inter-Regular.ttf'),
+    InterBold: require('../assets/fonts/Inter-Bold.ttf'),
   });
   if (error) {
     console.error(error);
@@ -39,7 +40,7 @@ export default function RootLayout() {
   }
  const TextAny = Text as any;
   if (TextAny.defaultProps == null) TextAny.defaultProps = {};
-  TextAny.defaultProps.style = [TextAny.defaultProps.style, { fontFamily: 'Inter' }];
+ TextAny.defaultProps.style = [TextAny.defaultProps.style, { fontFamily: 'InterRegular' }];
 
 
   return (

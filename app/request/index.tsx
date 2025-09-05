@@ -24,10 +24,10 @@ export default function MyRequests() {
     loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     loadingText: { marginTop: 8, color: colors.subtext },
     container: { flex: 1, padding: 16, gap: 12 },
-    title: { fontSize: 28, fontWeight: '800', color: colors.text },
+    title: { fontSize: 28, color: colors.text, fontFamily: 'InterBold' },
     empty: { color: colors.subtext },
     card: { padding: 14, borderWidth: 1, borderRadius: 12, marginVertical: 6, borderColor: colors.border },
-    cardTitle: { fontWeight: '700', color: colors.text },
+      cardTitle: { color: colors.text, fontFamily: 'InterBold' },
     cardSub: { color: colors.subtext, marginTop: 4 },
   }), [colors]);
 

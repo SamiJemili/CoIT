@@ -23,7 +23,7 @@ export default function SignUp() {
 
   const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 14 },
-    title: { fontSize: 28, fontWeight: '800', marginBottom: 8, color: colors.text },
+     title: { fontSize: 28, marginBottom: 8, color: colors.text, fontFamily: 'InterBold' },
     input: {
       borderWidth: 1,
       borderRadius: 10,
@@ -41,7 +41,7 @@ export default function SignUp() {
       borderColor: colors.border,
     },
     roleButtonActive: { backgroundColor: colors.brandLight },
-    roleButtonText: { fontWeight: '600', color: colors.text },
+    roleButtonText: { color: colors.text, fontFamily: 'InterBold' },
     submitButton: { marginTop: 6 },
   });
 

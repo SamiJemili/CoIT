@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.bg,
-    fontWeight: '800',
+      fontFamily: 'InterBold',
+
   },
 });

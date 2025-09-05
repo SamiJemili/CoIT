@@ -17,7 +17,7 @@ export default function SignIn() {
 
   const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, gap: 14 },
-    title: { fontSize: 28, fontWeight: '800', marginBottom: 8, color: colors.text },
+  title: { fontSize: 28, marginBottom: 8, color: colors.text, fontFamily: 'InterBold' },
     input: {
       borderWidth: 1,
       borderRadius: 10,

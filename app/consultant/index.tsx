@@ -30,17 +30,17 @@ export default function Consultant() {
     const { colors } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
     container: { flex: 1, padding: 16, gap: 12 },
-    header: { fontSize: 26, fontWeight: '800', color: colors.text },
+    header: { fontSize: 26, color: colors.text, fontFamily: 'InterBold' },
     statusRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
     statusText: { color: colors.text },
      logoutBtn: { backgroundColor: colors.accent, padding: 12, borderRadius: 12, alignItems: 'center' },
-    logoutText: { color: colors.text, fontWeight: '800' },
-    sectionTitle: { marginTop: 10, fontWeight: '700', color: colors.text },
+    logoutText: { color: colors.text, fontFamily: 'InterBold' },
+    sectionTitle: { marginTop: 10, color: colors.text, fontFamily: 'InterBold' },
     loadingWrap: { marginTop: 24, alignItems: 'center' },
     loadingText: { color: colors.subtext, marginTop: 8 },
     emptyText: { color: colors.subtext, marginTop: 12 },
     card: { padding: 12, borderWidth: 1, borderRadius: 12, marginVertical: 6, borderColor: colors.border },
-    cardTitle: { fontWeight: '700', color: colors.text },
+    cardTitle: { color: colors.text, fontFamily: 'InterBold' },
     cardEmail: { color: colors.subtext },
     cardStatus: { color: colors.subtext },
   }), [colors]);
