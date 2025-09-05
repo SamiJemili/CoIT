@@ -6,6 +6,7 @@ import { auth, db } from '../../lib/firebase';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getUserRole } from '../../lib/roles';
 import { useTheme } from '../../lib/theme';
+import { parsePositiveNumber } from '../../lib/priceValidation';
 
 
 
@@ -49,10 +50,27 @@ const [msgsLoading, setMsgsLoading] = useState(true);
     bubbleTextOther: { color: colors.text },
     inputRow: { flexDirection: 'row', padding: 8, borderTopWidth: 1, borderColor: colors.border },
     input: { flex: 1, borderWidth: 1, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, marginRight: 8, borderColor: colors.border, color: colors.text },
-     sendBtn: { backgroundColor: colors.accent, borderRadius: 20, paddingHorizontal: 16, justifyContent: 'center' },
-     sendText: { color: colors.text, fontFamily: 'InterBold' },
+   sendBtn: { backgroundColor: colors.accent, borderRadius: 20, paddingHorizontal: 16, justifyContent: 'center' },
+    sendText: { color: colors.text, fontFamily: 'InterBold' },
     infoBar: { padding: 8, borderBottomWidth: 1, borderColor: colors.border },
     infoText: { textAlign: 'center', color: colors.subtext },
+      priceBar: { flexDirection: 'row', padding: 8, borderBottomWidth: 1, borderColor: colors.border },
+    priceInput: { flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginRight: 8, borderColor: colors.border },
+    priceProposeBtn: { backgroundColor: colors.brand, borderRadius: 8, paddingHorizontal: 16, justifyContent: 'center' },
+    priceProposeText: { color: colors.bg, fontFamily: 'InterBold' },
+    pricePendingBar: { padding: 8, borderBottomWidth: 1, borderColor: colors.border },
+    pricePendingText: { marginBottom: 8, color: colors.text },
+    priceButtonsRow: { flexDirection: 'row', gap: 8 },
+    priceAcceptBtn: { flex: 1, backgroundColor: colors.success, borderRadius: 8, padding: 8, alignItems: 'center' },
+    priceRejectBtn: { flex: 1, backgroundColor: colors.danger, borderRadius: 8, padding: 8, alignItems: 'center' },
+    priceActionText: { color: colors.bg, fontFamily: 'InterBold' },
+    consultantBar: { flexDirection: 'row', justifyContent: 'space-around', padding: 8, borderBottomWidth: 1, borderColor: colors.border },
+    onHoldBtn: { backgroundColor: colors.warning, padding: 8, borderRadius: 8 },
+    onHoldText: { fontFamily: 'InterBold', color: colors.text },
+    closeBtn: { backgroundColor: colors.dangerLight, padding: 8, borderRadius: 8 },
+    closeText: { color: colors.bg, fontFamily: 'InterBold' },
+    noteBtn: { backgroundColor: colors.info, padding: 8, borderRadius: 8 },
+    noteText: { fontFamily: 'InterBold', color: colors.text },
   }), [colors]);
 
   useEffect(() => {
@@ -136,8 +154,12 @@ const [msgsLoading, setMsgsLoading] = useState(true);
     }
   };
  const propose = async () => {
-    const val = parseFloat(priceInput);
-    if (!id || isNaN(val)) return;
+    if (!id) return;
+    const val = parsePositiveNumber(priceInput);
+    if (val === null) {
+      Alert.alert('Prix invalide', 'Veuillez entrer un nombre positif.');
+      return;
+    }
     setPriceInput('');
     try {
       await updateDoc(doc(db, 'requests', id), { price: val, priceStatus: 'pending' });
@@ -173,7 +195,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
     setNoteText('');
   };
 
-  const handleNoteSubmit = async () => {
+  const addNote = async () => {
     if (!id || !auth.currentUser) return;
     const t = noteText.trim();
     if (!t) return;
@@ -214,51 +236,51 @@ const [msgsLoading, setMsgsLoading] = useState(true);
         </View>
       )}
         {isConsultant ? (
-        <View style={{ flexDirection: 'row', padding: 8, borderBottomWidth: 1, borderColor: '#ddd' }}>
+       <View style={styles.priceBar}>
           <TextInput
             placeholder="Prix"
             keyboardType="numeric"
             value={priceInput}
             onChangeText={setPriceInput}
-            style={{ flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 10, marginRight: 8 }}
+         style={styles.priceInput}
           />
           <Pressable
             onPress={propose}
-            style={{ backgroundColor: '#2563eb', borderRadius: 8, paddingHorizontal: 16, justifyContent: 'center' }}
+            style={styles.priceProposeBtn}
           >
-             <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Proposer</Text>
+             <Text style={styles.priceProposeText}>Proposer</Text>
           </Pressable>
         </View>
       ) : priceStatus === 'pending' ? (
-        <View style={{ padding: 8, borderBottomWidth: 1, borderColor: '#ddd' }}>
-          <Text style={{ marginBottom: 8 }}>Prix proposé : {price}</Text>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
+        <View style={styles.pricePendingBar}>
+          <Text style={styles.pricePendingText}>Prix proposé : {price}</Text>
+          <View style={styles.priceButtonsRow}>
             <Pressable
               onPress={() => respond('accepted')}
-              style={{ flex: 1, backgroundColor: '#16a34a', borderRadius: 8, padding: 8, alignItems: 'center' }}
+           style={styles.priceAcceptBtn}
             >
-               <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Accepter</Text>
+              <Text style={styles.priceActionText}>Accepter</Text>
             </Pressable>
             <Pressable
               onPress={() => respond('rejected')}
-              style={{ flex: 1, backgroundColor: '#dc2626', borderRadius: 8, padding: 8, alignItems: 'center' }}
+             style={styles.priceRejectBtn}
             >
-              <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Refuser</Text>
+           <Text style={styles.priceActionText}>Refuser</Text>
             </Pressable>
           </View>
         </View>
       ) : null}
 
- {role === 'consultant' && (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 8, borderBottomWidth: 1, borderColor: '#ddd' }}>
-          <Pressable onPress={() => changeStatus('on_hold')} style={{ backgroundColor: '#fde68a', padding: 8, borderRadius: 8 }}>
-           <Text style={{ fontFamily: 'InterBold' }}>Mettre en attente</Text>
+{role === 'consultant' && (
+        <View style={styles.consultantBar}>
+          <Pressable onPress={() => changeStatus('on_hold')} style={styles.onHoldBtn}>
+           <Text style={styles.onHoldText}>Mettre en attente</Text>
           </Pressable>
-          <Pressable onPress={() => changeStatus('closed')} style={{ backgroundColor: '#f87171', padding: 8, borderRadius: 8 }}>
-            <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Clore la demande</Text>
+          <Pressable onPress={() => changeStatus('closed')} style={styles.closeBtn}>
+            <Text style={styles.closeText}>Clore la demande</Text>
           </Pressable>
-           <Pressable onPress={openNoteDialog} style={{ backgroundColor: '#93c5fd', padding: 8, borderRadius: 8 }}>
-            <Text style={{ fontFamily: 'InterBold' }}>Ajouter un commentaire</Text>
+            <Pressable onPress={addNote} style={styles.noteBtn}>
+            <Text style={styles.noteText}>Ajouter un commentaire</Text>
           </Pressable>
         </View>
       )}
@@ -291,7 +313,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
         <Dialog.Title>Ajouter un commentaire</Dialog.Title>
         <Dialog.Input value={noteText} onChangeText={setNoteText} />
         <Dialog.Button label="Annuler" onPress={handleNoteCancel} />
-        <Dialog.Button label="Ajouter" onPress={handleNoteSubmit} />
+        <Dialog.Button label="Ajouter" onPress={addNote} />
       </Dialog.Container>
     </KeyboardAvoidingView>
   );
