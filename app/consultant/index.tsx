@@ -33,8 +33,8 @@ export default function Consultant() {
     header: { fontSize: 26, fontWeight: '800', color: colors.text },
     statusRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
     statusText: { color: colors.text },
-    logoutBtn: { backgroundColor: colors.brand, padding: 12, borderRadius: 12, alignItems: 'center' },
-    logoutText: { color: colors.bg, fontWeight: '800' },
+     logoutBtn: { backgroundColor: colors.accent, padding: 12, borderRadius: 12, alignItems: 'center' },
+    logoutText: { color: colors.text, fontWeight: '800' },
     sectionTitle: { marginTop: 10, fontWeight: '700', color: colors.text },
     loadingWrap: { marginTop: 24, alignItems: 'center' },
     loadingText: { color: colors.subtext, marginTop: 8 },
@@ -84,11 +84,11 @@ export default function Consultant() {
         <Text style={styles.logoutText}>Se déconnecter</Text>
       </Pressable>
 
-       <Text style={{ marginTop: 10, fontWeight: '700' }}>Demandes en cours</Text>
+        <Text style={styles.sectionTitle}>Demandes en cours</Text>
 
       {loading ? (
         <View style={styles.loadingWrap}>
-          <ActivityIndicator color={colors.brand} />
+           <ActivityIndicator color={colors.accent} />
           <Text style={styles.loadingText}>Chargement…</Text>
         </View>
       ) : reqs.length === 0 ? (
