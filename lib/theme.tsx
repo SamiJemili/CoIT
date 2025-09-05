@@ -11,6 +11,11 @@ export const colors = {
   bg: '#FFFFFF',
   bubbleMe: '#E0F2FE',
   bubbleOther: '#F1F5F9',
+  success: '#16A34A',
+  danger: '#DC2626',
+  warning: '#FDE68A',
+  dangerLight: '#F87171',
+  info: '#93C5FD',
 };
 
 type Theme = {

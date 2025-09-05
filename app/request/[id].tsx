@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useMemo, useCallback } from 'react';
 import { View, Text, TextInput, Pressable, FlatList, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet, Alert } from 'react-native';
+import Dialog from 'react-native-dialog';
 import { useLocalSearchParams } from 'expo-router';
 import { auth, db } from '../../lib/firebase';
 import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
@@ -33,6 +34,8 @@ export default function RequestChat() {
 const [msgsLoading, setMsgsLoading] = useState(true);
   const [info, setInfo] = useState<ReqInfo | null>(null);
   const [infoLoading, setInfoLoading] = useState(true);
+  const [noteVisible, setNoteVisible] = useState(false);
+  const [noteText, setNoteText] = useState('');
   const flatListRef = useRef<FlatList<Message>>(null);
   const { colors } = useTheme();
   const styles = useMemo(() => StyleSheet.create({
@@ -160,21 +163,30 @@ const [msgsLoading, setMsgsLoading] = useState(true);
     }
   };
 
-  const addNote = () => {
+   const openNoteDialog = () => {
+    setNoteText('');
+    setNoteVisible(true);
+  };
+
+  const handleNoteCancel = () => {
+    setNoteVisible(false);
+    setNoteText('');
+  };
+
+  const handleNoteSubmit = async () => {
     if (!id || !auth.currentUser) return;
-    Alert.prompt('Ajouter un commentaire', undefined, async (text) => {
-      const t = text?.trim();
-      if (!t) return;
-      try {
-        await addDoc(collection(db, 'requests', id, 'consultantNotes'), {
-          text: t,
-            consultantId: auth.currentUser!.uid,
-          createdAt: serverTimestamp(),
-        });
-      } catch (e) {
-        Alert.alert('Erreur', 'Impossible d\'ajouter le commentaire.');
-      }
-    });
+    const t = noteText.trim();
+    if (!t) return;
+    try {
+      await addDoc(collection(db, 'requests', id, 'consultantNotes'), {
+        text: t,
+        consultantId: auth.currentUser.uid,
+        createdAt: serverTimestamp(),
+      });
+      handleNoteCancel();
+    } catch (e) {
+      Alert.alert('Erreur', "Impossible d'ajouter le commentaire.");
+    }
   };
 
  if (msgsLoading || infoLoading) {
@@ -245,7 +257,7 @@ const [msgsLoading, setMsgsLoading] = useState(true);
           <Pressable onPress={() => changeStatus('closed')} style={{ backgroundColor: '#f87171', padding: 8, borderRadius: 8 }}>
             <Text style={{ color: 'white', fontFamily: 'InterBold' }}>Clore la demande</Text>
           </Pressable>
-          <Pressable onPress={addNote} style={{ backgroundColor: '#93c5fd', padding: 8, borderRadius: 8 }}>
+           <Pressable onPress={openNoteDialog} style={{ backgroundColor: '#93c5fd', padding: 8, borderRadius: 8 }}>
             <Text style={{ fontFamily: 'InterBold' }}>Ajouter un commentaire</Text>
           </Pressable>
         </View>
@@ -274,6 +286,13 @@ const [msgsLoading, setMsgsLoading] = useState(true);
            <Text style={styles.sendText}>Envoyer</Text>
         </Pressable>
       </View>
+      
+      <Dialog.Container visible={noteVisible}>
+        <Dialog.Title>Ajouter un commentaire</Dialog.Title>
+        <Dialog.Input value={noteText} onChangeText={setNoteText} />
+        <Dialog.Button label="Annuler" onPress={handleNoteCancel} />
+        <Dialog.Button label="Ajouter" onPress={handleNoteSubmit} />
+      </Dialog.Container>
     </KeyboardAvoidingView>
   );
 }

@@ -8,8 +8,12 @@ import Constants from 'expo-constants';
 const cfg = (Constants.expoConfig?.extra as any)?.firebase ?? {};
 export const app = getApps().length ? getApps()[0] : initializeApp(cfg);
 
-// Active les logs Firestore pour le diagnostic
-setLogLevel('debug');
+// Active les logs Firestore pour le diagnostic uniquement en développement
+if (__DEV__) {
+  setLogLevel('debug');
+} else {
+  setLogLevel('error');
+}
 
 export const auth = (() => {
   try {
