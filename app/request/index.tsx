@@ -63,7 +63,7 @@ export default function MyRequests() {
   if (loading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator color={colors.brand} />
+        <ActivityIndicator color={colors.accent} />
         <Text style={styles.loadingText}>Chargement…</Text>
       </View>
     );

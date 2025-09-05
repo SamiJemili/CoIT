@@ -1,6 +1,6 @@
 // app/_layout.tsx
 import { Stack } from 'expo-router';
-import { LogBox, Text } from 'react-native';
+import { ActivityIndicator, LogBox, Text } from 'react-native';
 import { useFonts } from 'expo-font';
 import { ThemeProvider, useTheme } from '../lib/theme';
 
@@ -25,16 +25,21 @@ function LayoutStack() {
   );
 }
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+   const [fontsLoaded, error] = useFonts({
     Inter: require('../assets/fonts/Inter-VariableFont.ttf'),
   });
+  if (error) {
+    console.error(error);
+    return <Text>Failed to load fonts</Text>;
+  }
+
 
   if (!fontsLoaded) {
-    return null;
+    return <ActivityIndicator />;
   }
-const TextAny = Text as any;
-if (TextAny.defaultProps == null) TextAny.defaultProps = {};
-TextAny.defaultProps.style = [TextAny.defaultProps.style, { fontFamily: 'Inter' }];
+ const TextAny = Text as any;
+  if (TextAny.defaultProps == null) TextAny.defaultProps = {};
+  TextAny.defaultProps.style = [TextAny.defaultProps.style, { fontFamily: 'Inter' }];
 
 
   return (
